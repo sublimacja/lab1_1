@@ -18,13 +18,11 @@ import java.util.Date;
 public class OfferItem {
 
     // product
-    private BigDecimal productPrice;
 
     private int quantity;
 
-    private BigDecimal totalCost;
-
     private String currency;
+    Money totalCost;
 
     // discount
     private String discountCause;
@@ -40,8 +38,7 @@ public class OfferItem {
 
     public OfferItem(String productId, BigDecimal productPrice, String productName, Date productSnapshotDate,
             String productType, int quantity, BigDecimal discount, String discountCause) {
-        this.productPrice = productPrice;
-        this.product = new Product(productId,productType,productName,productSnapshotDate);
+        this.product = new Product(productId,productType,productName,productSnapshotDate,totalCost);
 
         this.quantity = quantity;
         this.discount = discount;
@@ -52,18 +49,14 @@ public class OfferItem {
             discountValue = discountValue.subtract(discount);
         }
 
-        this.totalCost = productPrice.multiply(new BigDecimal(quantity)).subtract(discountValue);
+        this.totalCost = product.getPrice().multiply(new BigDecimal(quantity)).subtract(discountValue);
     }
 
     public Product getProduct() {
         return product;
     }
 
-    public BigDecimal getProductPrice() {
-        return productPrice;
-    }
-
-    public BigDecimal getTotalCost() {
+    public Money getTotalCost() {
         return totalCost;
     }
 
@@ -88,7 +81,6 @@ public class OfferItem {
         final int prime = 31;
         int result = 1;
         result = prime * result + (discount == null ? 0 : discount.hashCode());
-        result = prime * result + (productPrice == null ? 0 : productPrice.hashCode());
         result = prime * result + quantity;
         result = prime * result + (product == null ? 0 : product.hashCode());
         result = prime * result + (totalCost == null ? 0 : totalCost.hashCode());
@@ -123,11 +115,11 @@ public class OfferItem {
             return false;
         }
 
-        if (productPrice == null) {
-            if (other.productPrice != null) {
+        if (totalCost == null) {
+            if (other.totalCost != null) {
                 return false;
             }
-        } else if (!productPrice.equals(other.productPrice)) {
+        } else if (!totalCost.equals(other.totalCost)) {
             return false;
         }
 
@@ -156,13 +148,6 @@ public class OfferItem {
             return false;
         }
 
-        if (productPrice == null) {
-            if (other.productPrice != null) {
-                return false;
-            }
-        } else if (!productPrice.equals(other.productPrice)) {
-            return false;
-        }
 
         if (quantity != other.quantity) {
             return false;
@@ -171,11 +156,11 @@ public class OfferItem {
         BigDecimal max;
         BigDecimal min;
         if (totalCost.compareTo(other.totalCost) > 0) {
-            max = totalCost;
-            min = other.totalCost;
+            max = totalCost.getAmount();
+            min = other.totalCost.getAmount();
         } else {
-            max = other.totalCost;
-            min = totalCost;
+            max = other.totalCost.getAmount();
+            min = totalCost.getAmount();
         }
 
         BigDecimal difference = max.subtract(min);

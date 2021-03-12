@@ -8,12 +8,18 @@ public class Product {
     private String Type;
     private String Name;
     private Date SnapshotDate;
+    private Money Price;
 
-    public Product(String id, String type, String name, Date snapshotDate) {
+    public Product(String id, String type, String name, Date snapshotDate,Money price) {
         this.Id = id;
         this.Type = type;
         this.Name = name;
         this.SnapshotDate = snapshotDate;
+        this.Price=price;
+    }
+
+    public Money getPrice() {
+        return Price;
     }
 
     public String getId() {
